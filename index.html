@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIAH Store PRO</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#eef2f7;color:#111827;padding-bottom:85px}
+.hidden{display:none!important}
+header{background:linear-gradient(135deg,#111827,#1e3a8a);color:white;padding:22px;border-radius:0 0 28px 28px}
+h1{margin:0;font-size:34px}
+.container{padding:15px;max-width:1200px;margin:auto}
+.card{background:white;border-radius:22px;padding:18px;margin-bottom:15px;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+button{border:0;border-radius:14px;padding:12px 15px;background:#2563eb;color:white;font-weight:bold;font-size:14px}
+.green{background:#16a34a}.red{background:#dc2626}.orange{background:#f97316}.dark{background:#111827}.gray{background:#6b7280}
+input,textarea,select{width:100%;padding:12px;border-radius:14px;border:1px solid #d1d5db;margin-bottom:9px;font-size:14px}
+textarea{min-height:70px}
+.menu{display:grid;gap:12px}
+.menu button{height:80px;font-size:18px}
+.articleBox{background:#f8fafc;padding:10px;border-radius:16px;margin-bottom:10px}
+.summary{display:grid;gap:10px}
+.summary div{background:#f8fafc;border-radius:16px;padding:14px;text-align:center;font-weight:bold}
+.filter{display:flex;gap:8px;flex-wrap:wrap}
+.filter button.active{outline:3px solid #facc15}
+.checks label{display:block;margin:8px 0}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;box-shadow:0 -4px 15px #0002}
+.bottom button{font-size:12px;padding:10px 4px}
+@media(min-width:700px){.menu,.summary{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+
+<body>
+
+<div id="loginPage" class="container">
+  <div class="card">
+    <h2>Connexion KIAH Store</h2>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Mot de passe">
+    <button onclick="login()">Connexion</button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+
+<header>
+  <h1>KIAH Store</h1>
+  <p>Commandes • Livraison • Finance</p>
+
+  <button class="dark" onclick="toggleUser()">☰ Utilisateur</button>
+
+  <div id="userBox" class="hidden" style="margin-top:10px">
+    <select id="profiles" onchange="changeProfile()"></select>
+    <button class="orange" onclick="addProfile()">+ Surnom</button>
+    <button class="gray" onclick="renameProfile()">Modifier surnom</button>
+    <button class="red" onclick="logout()">Quitter</button>
+  </div>
+</header>
+
+<div class="container">
+
+<section id="home">
+  <div class="card">
+    <h2>Accueil</h2>
+    <p>Utilisateur : <b id="currentUser">Principal</b></p>
+    <div class="menu">
+      <button onclick="openNew()">Nouvelle commande</button>
+      <button class="green" onclick="show('livraison')">Liste de livraison</button>
+      <button class="dark" onclick="show('finance')">Gestion financière</button>
+    </div>
+  </div>
+</section>
+
+<section id="new" class="hidden">
+  <div class="card">
+    <h2 id="formTitle">Nouvelle commande</h2>
+    <input id="nom" placeholder="Nom">
+    <input id="contact" placeholder="Contact">
+    <textarea id="adresse" placeholder="Adresse"></textarea>
+
+    <h3>Articles</h3>
+    <div id="articles"></div>
+    <button class="orange" onclick="addArticle()">+ Ajouter article</button>
+
+    <br><br>
+    <input id="livraisonPrix" type="number" placeholder="Prix livraison">
+    <input id="agence" placeholder="Nom agence livraison">
+    <input id="dateLivraison" type="date">
+    <textarea id="remarque" placeholder="Remarque"></textarea>
+
+    <button class="green" onclick="saveOrder()">Enregistrer</button>
+    <button class="gray" onclick="cancelEdit()">Annuler</button>
+  </div>
+</section>
+
+<section id="livraison" class="hidden">
+  <div class="card">
+    <h2>Liste de livraison</h2>
+    <div class="summary">
+      <div>Commandes<br><span id="count">0</span></div>
+      <div>Total articles<br><span id="sumArticles">0 Ar</span></div>
+      <div>Total général<br><span id="sumGeneral">0 Ar</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Agence</h3>
+    <div id="agencyBtns" class="filter"></div>
+    <h3>Date</h3>
+    <div id="dateBtns" class="filter"></div>
+  </div>
+
+  <div class="card">
+    <button class="orange" onclick="toggleCapture()">📸 Télécharger tableau PNG</button>
+
+    <div id="captureBox" class="hidden checks" style="margin-top:15px">
+      <h3>Choisir ce qui apparaît dans la photo</h3>
+
+      <label><input type="checkbox" class="colChoice" value="nom" checked> Nom</label>
+      <label><input type="checkbox" class="colChoice" value="contact" checked> Contact</label>
+      <label><input type="checkbox" class="colChoice" value="adresse" checked> Adresse</label>
+      <label><input type="checkbox" class="colChoice" value="articles" checked> Articles / Qté / Prix</label>
+      <label><input type="checkbox" class="colChoice" value="totalArticles" checked> Total articles</label>
+      <label><input type="checkbox" class="colChoice" value="livraison" checked> Prix livraison</label>
+      <label><input type="checkbox" class="colChoice" value="total" checked> Total</label>
+      <label><input type="checkbox" class="colChoice" value="agence" checked> Agence</label>
+      <label><input type="checkbox" class="colChoice" value="date" checked> Date</label>
+      <label><input type="checkbox" class="colChoice" value="remarque"> Remarque</label>
+
+      <br>
+      <button class="green" onclick="downloadPNG()">Télécharger PNG</button>
+    </div>
+  </div>
+
+  <div id="ordersList"></div>
+</section>
+
+<section id="finance" class="hidden">
+  <div class="card">
+    <h2>Gestion financière</h2>
+    <div class="summary">
+      <div>Total<br><span id="finTotal">0 Ar</span></div>
+      <div>Total livraison<br><span id="finLivraison">0 Ar</span></div>
+      <div>À obtenir<br><span id="finGet">0 Ar</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Détail financier</h3>
+    <div id="financeList"></div>
+  </div>
+</section>
+
+</div>
+
+<div class="bottom">
+  <button onclick="show('home')">Accueil</button>
+  <button onclick="openNew()">+ Commande</button>
+  <button onclick="show('livraison')">Livraison</button>
+  <button onclick="show('finance')">Finance</button>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD8M5Ycw_ShmcmwH6Y0NDaK71zXziaZqAA",
+  authDomain: "kiah-store.firebaseapp.com",
+  databaseURL: "https://kiah-store-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "kiah-store",
+  storageBucket: "kiah-store.firebasestorage.app",
+  messagingSenderId: "762174434565",
+  appId: "1:762174434565:web:34c32000de8af6a3bc9b6c"
+};
+
+const fb=initializeApp(firebaseConfig);
+const auth=getAuth(fb);
+const db=getDatabase(fb);
+
+let profile=localStorage.getItem("profile")||"Principal";
+let orders={};
+let selectedAgency="ALL";
+let selectedDate="ALL";
+let editId=null;
+
+function path(){return "kiahStore/"+encodeURIComponent(profile)+"/commandes"}
+
+window.login=()=>signInWithEmailAndPassword(auth,email.value,password.value).catch(e=>alert(e.message));
+window.logout=()=>signOut(auth);
+window.toggleUser=()=>userBox.classList.toggle("hidden");
+
+onAuthStateChanged(auth,u=>{
+  if(u){
+    loginPage.classList.add("hidden");
+    app.classList.remove("hidden");
+    loadProfiles();
+    loadOrders();
+    restoreColumns();
+  }
+});
+
+function loadProfiles(){
+  onValue(ref(db,"kiahStoreProfiles"),snap=>{
+    let p=snap.val()||{};
+    if(!p.Principal)set(ref(db,"kiahStoreProfiles/Principal"),true);
+    p.Principal=true;
+
+    profiles.innerHTML="";
+    Object.keys(p).forEach(n=>{
+      profiles.innerHTML+=`<option ${n===profile?"selected":""}>${n}</option>`;
+    });
+    currentUser.innerText=profile;
+  });
+}
+
+window.addProfile=()=>{
+  let n=prompt("Nouveau surnom");
+  if(!n)return;
+  profile=n.trim();
+  localStorage.setItem("profile",profile);
+  set(ref(db,"kiahStoreProfiles/"+profile),true);
+  currentUser.innerText=profile;
+  loadOrders();
+};
+
+window.renameProfile=()=>{
+  let n=prompt("Modifier surnom",profile);
+  if(!n)return;
+  profile=n.trim();
+  localStorage.setItem("profile",profile);
+  set(ref(db,"kiahStoreProfiles/"+profile),true);
+  currentUser.innerText=profile;
+  loadOrders();
+};
+
+window.changeProfile=()=>{
+  profile=profiles.value;
+  localStorage.setItem("profile",profile);
+  currentUser.innerText=profile;
+  selectedAgency="ALL";
+  selectedDate="ALL";
+  loadOrders();
+};
+
+function loadOrders(){
+  onValue(ref(db,path()),snap=>{
+    orders=snap.val()||{};
+    render();
+  });
+}
+
+window.show=id=>{
+  ["home","new","livraison","finance"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  render();
+};
+
+window.openNew=()=>{
+  clearForm();
+  addArticle();
+  show("new");
+};
+
+window.addArticle=(article="",qte="",prix="")=>{
+  let div=document.createElement("div");
+  div.className="articleBox";
+  div.innerHTML=`
+    <input class="a" placeholder="Article" value="${article}">
+    <input class="q" type="number" placeholder="Quantité" value="${qte}">
+    <input class="p" type="number" placeholder="Prix unitaire" value="${prix}">
+    <button class="red" onclick="this.parentElement.remove()">×</button>
+  `;
+  articles.appendChild(div);
+};
+
+function getArticles(){
+  let a=[...document.querySelectorAll(".a")];
+  let q=[...document.querySelectorAll(".q")];
+  let p=[...document.querySelectorAll(".p")];
+  return a.map((x,i)=>({
+    article:x.value,
+    quantite:Number(q[i].value||0),
+    prix:Number(p[i].value||0)
+  }));
+}
+
+window.saveOrder=async()=>{
+  let data={
+    nom:nom.value,
+    contact:contact.value,
+    adresse:adresse.value,
+    articles:getArticles(),
+    livraison:Number(livraisonPrix.value||0),
+    agence:agence.value,
+    date:dateLivraison.value,
+    remarque:remarque.value,
+    createdAt:editId && orders[editId]?.createdAt ? orders[editId].createdAt : Date.now(),
+    updatedAt:Date.now()
+  };
+
+  try{
+    if(editId){
+      await update(ref(db,path()+"/"+editId),data);
+      alert("Commande modifiée ✅");
+    }else{
+      await set(push(ref(db,path())),data);
+      alert("Commande ajoutée ✅");
+    }
+
+    clearForm();
+    show("livraison");
+  }catch(e){
+    alert("Erreur: "+e.message);
+  }
+};
+
+function clearForm(){
+  editId=null;
+  formTitle.innerText="Nouvelle commande";
+  nom.value="";
+  contact.value="";
+  adresse.value="";
+  livraisonPrix.value="";
+  agence.value="";
+  dateLivraison.value="";
+  remarque.value="";
+  articles.innerHTML="";
+}
+
+window.cancelEdit=()=>{
+  clearForm();
+  show("home");
+};
+
+function artTotal(o){
+  return(o.articles||[]).reduce((s,a)=>s+(Number(a.quantite||0)*Number(a.prix||0)),0)
+}
+
+function money(v){return Number(v||0).toLocaleString("fr-FR")+" Ar"}
+function agency(o){return o.agence||"Sans agence"}
+function dte(o){return o.date||"Sans date"}
+
+function filteredOrders(){
+  let arr=Object.entries(orders).map(([id,o])=>({id,...o}));
+  if(selectedAgency!=="ALL")arr=arr.filter(o=>agency(o)===selectedAgency);
+  if(selectedDate!=="ALL")arr=arr.filter(o=>dte(o)===selectedDate);
+  return arr.reverse();
+}
+
+function render(){
+  let all=Object.entries(orders).map(([id,o])=>({id,...o}));
+
+  let agencies=[...new Set(all.map(agency))];
+  let dates=[...new Set(all.filter(o=>selectedAgency==="ALL"||agency(o)===selectedAgency).map(dte))];
+
+  agencyBtns.innerHTML=`<button class="${selectedAgency==="ALL"?"active":""}" onclick="filterAgency('ALL')">Toutes</button>`;
+  agencies.forEach(a=>agencyBtns.innerHTML+=`<button class="${selectedAgency===a?"active":""}" onclick="filterAgency('${a}')">${a}</button>`);
+
+  dateBtns.innerHTML=`<button class="${selectedDate==="ALL"?"active":""}" onclick="filterDate('ALL')">Toutes</button>`;
+  dates.forEach(d=>dateBtns.innerHTML+=`<button class="${selectedDate===d?"active":""}" onclick="filterDate('${d}')">${d}</button>`);
+
+  let arr=filteredOrders();
+
+  ordersList.innerHTML="";
+  financeList.innerHTML="";
+
+  let c=0,totalArticles=0,totalLivraison=0,totalGeneral=0;
+
+  arr.forEach(o=>{
+    c++;
+    let at=artTotal(o);
+    let liv=Number(o.livraison||0);
+    let total=at+liv;
+
+    totalArticles+=at;
+    totalLivraison+=liv;
+    totalGeneral+=total;
+
+    ordersList.innerHTML+=`
+      <div class="card">
+        <h3>${o.nom||"Sans nom"}</h3>
+        <p>${o.contact||""}</p>
+        <p>${o.adresse||""}</p>
+
+        ${(o.articles||[]).map(x=>`
+          <div class="articleBox">
+            ${x.article||"Article"} | Qté ${x.quantite||0} | ${money(x.prix)}
+          </div>
+        `).join("")}
+
+        <p><b>Total articles:</b> ${money(at)}</p>
+        <p><b>Livraison:</b> ${money(liv)}</p>
+        <p><b>Total:</b> ${money(total)}</p>
+        <p><b>Agence:</b> ${agency(o)}</p>
+        <p><b>Date:</b> ${dte(o)}</p>
+        ${o.remarque ? `<p><b>Remarque:</b> ${o.remarque}</p>` : ""}
+
+        <button onclick="editOrder('${o.id}')">Modifier</button>
+        <button class="red" onclick="deleteOrder('${o.id}')">Supprimer</button>
+      </div>
+    `;
+
+    financeList.innerHTML+=`
+      <div class="card">
+        <b>${o.nom||"Sans nom"}</b><br>
+        Total: ${money(total)}<br>
+        Livraison: ${money(liv)}<br>
+        À obtenir: ${money(total-liv)}
+      </div>
+    `;
+  });
+
+  count.innerText=c;
+  sumArticles.innerText=money(totalArticles);
+  sumGeneral.innerText=money(totalGeneral);
+
+  finTotal.innerText=money(totalGeneral);
+  finLivraison.innerText=money(totalLivraison);
+  finGet.innerText=money(totalGeneral-totalLivraison);
+}
+
+window.editOrder=id=>{
+  let o=orders[id];
+  editId=id;
+
+  formTitle.innerText="Modifier commande";
+  nom.value=o.nom||"";
+  contact.value=o.contact||"";
+  adresse.value=o.adresse||"";
+  livraisonPrix.value=o.livraison||"";
+  agence.value=o.agence||"";
+  dateLivraison.value=o.date||"";
+  remarque.value=o.remarque||"";
+
+  articles.innerHTML="";
+  (o.articles||[]).forEach(a=>addArticle(a.article,a.quantite,a.prix));
+  if(!(o.articles||[]).length)addArticle();
+
+  show("new");
+};
+
+window.filterAgency=a=>{
+  selectedAgency=a;
+  selectedDate="ALL";
+  render();
+};
+
+window.filterDate=d=>{
+  selectedDate=d;
+  render();
+};
+
+window.deleteOrder=id=>{
+  if(confirm("Supprimer cette commande ?")){
+    remove(ref(db,path()+"/"+id));
+  }
+};
+
+window.toggleCapture=()=>{
+  captureBox.classList.toggle("hidden");
+};
+
+function restoreColumns(){
+  let saved=JSON.parse(localStorage.getItem("kiahCols")||"null");
+  if(!saved)return;
+  document.querySelectorAll(".colChoice").forEach(c=>{
+    c.checked=saved.includes(c.value);
+  });
+}
+
+window.downloadPNG=async()=>{
+  let selected=[...document.querySelectorAll(".colChoice:checked")].map(x=>x.value);
+
+  if(selected.length===0){
+    alert("Choisis au moins une colonne");
+    return;
+  }
+
+  localStorage.setItem("kiahCols",JSON.stringify(selected));
+
+  let arr=filteredOrders();
+
+  let box=document.createElement("div");
+  box.style.background="white";
+  box.style.padding="20px";
+  box.style.width="1100px";
+  box.style.position="fixed";
+  box.style.left="-9999px";
+  box.style.top="0";
+
+  box.innerHTML=`
+    <h2 style="text-align:center">LISTE DE LIVRAISON</h2>
+    <h3 style="text-align:center">${profile.toUpperCase()}</h3>
+    <p style="text-align:center">Export : ${new Date().toLocaleString("fr-FR")}</p>
+    <hr>
+    <table style="width:100%;border-collapse:collapse;font-family:Arial;font-size:14px">
+      <thead>
+        <tr>
+          ${selected.includes("nom")?"<th>Nom</th>":""}
+          ${selected.includes("contact")?"<th>Contact</th>":""}
+          ${selected.includes("adresse")?"<th>Adresse</th>":""}
+          ${selected.includes("articles")?"<th>Articles</th>":""}
+          ${selected.includes("totalArticles")?"<th>Total articles</th>":""}
+          ${selected.includes("livraison")?"<th>Livraison</th>":""}
+          ${selected.includes("total")?"<th>Total</th>":""}
+          ${selected.includes("agence")?"<th>Agence</th>":""}
+          ${selected.includes("date")?"<th>Date</th>":""}
+          ${selected.includes("remarque")?"<th>Remarque</th>":""}
+        </tr>
+      </thead>
+      <tbody>
+        ${arr.map(o=>{
+          let at=artTotal(o);
+          let liv=Number(o.livraison||0);
+          let total=at+liv;
+
+          return `
+            <tr>
+              ${selected.includes("nom")?`<td>${o.nom||""}</td>`:""}
+              ${selected.includes("contact")?`<td>${o.contact||""}</td>`:""}
+              ${selected.includes("adresse")?`<td>${o.adresse||""}</td>`:""}
+              ${selected.includes("articles")?`<td>${(o.articles||[]).map(a=>`${a.article||"Article"} / Qté ${a.quantite||0} / ${money(a.prix)}`).join("<br>")}</td>`:""}
+              ${selected.includes("totalArticles")?`<td>${money(at)}</td>`:""}
+              ${selected.includes("livraison")?`<td>${money(liv)}</td>`:""}
+              ${selected.includes("total")?`<td>${money(total)}</td>`:""}
+              ${selected.includes("agence")?`<td>${agency(o)}</td>`:""}
+              ${selected.includes("date")?`<td>${dte(o)}</td>`:""}
+              ${selected.includes("remarque")?`<td>${o.remarque||""}</td>`:""}
+            </tr>
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+
+  box.querySelectorAll("th,td").forEach(cell=>{
+    cell.style.border="1px solid #999";
+    cell.style.padding="8px";
+    cell.style.verticalAlign="top";
+  });
+
+  box.querySelectorAll("th").forEach(cell=>{
+    cell.style.background="#111827";
+    cell.style.color="white";
+  });
+
+  document.body.appendChild(box);
+
+  let canvas=await html2canvas(box,{scale:2});
+  let link=document.createElement("a");
+  link.download="Liste-Livraison-"+profile+".png";
+  link.href=canvas.toDataURL("image/png");
+  link.click();
+
+  box.remove();
+};
+</script>
+
+</body>
+</html>
