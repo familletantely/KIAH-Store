@@ -135,6 +135,10 @@ textarea{min-height:70px}
   </div>
 
   <div id="ordersList"></div>
+
+  <div class="card">
+    <button class="red" onclick="deleteAllOrders()">🗑 Supprimer toutes les commandes</button>
+  </div>
 </section>
 
 <section id="finance" class="hidden">
@@ -459,6 +463,17 @@ window.filterDate=d=>{
 window.deleteOrder=id=>{
   if(confirm("Supprimer cette commande ?")){
     remove(ref(db,path()+"/"+id));
+  }
+};
+
+window.deleteAllOrders=async()=>{
+  if(!confirm("Supprimer TOUTES les commandes ?")) return;
+
+  try{
+    await set(ref(db,path()),null);
+    alert("Toutes les commandes supprimées ✅");
+  }catch(e){
+    alert("Erreur : "+e.message);
   }
 };
 
