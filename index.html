@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIAH Store Cute PRO 2.0</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+:root{
+  --pink:#ff7ab6;
+  --pink2:#ffd6e8;
+  --purple:#8b5cf6;
+  --purple2:#ede9fe;
+  --blue:#60a5fa;
+  --green:#34d399;
+  --red:#fb7185;
+  --orange:#fb923c;
+  --dark:#374151;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --card:rgba(255,255,255,.86);
+  --border:rgba(255,255,255,.65);
+}
+
+*{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  padding-bottom:90px;
+  background:
+    radial-gradient(circle at 10% 10%,#ffe4f1 0 24%,transparent 25%),
+    radial-gradient(circle at 90% 0%,#ddd6fe 0 22%,transparent 23%),
+    linear-gradient(135deg,#fff7fb,#eef2ff 45%,#ecfeff);
+}
+
+.hidden{display:none!important}
+.container{padding:16px;max-width:1180px;margin:auto}
+
+header{
+  position:relative;
+  overflow:hidden;
+  color:white;
+  padding:26px 20px 24px;
+  border-radius:0 0 34px 34px;
+  background:linear-gradient(135deg,#ff7ab6,#8b5cf6 55%,#60a5fa);
+  box-shadow:0 16px 38px rgba(139,92,246,.24);
+}
+header:before{
+  content:"";
+  position:absolute;
+  width:190px;height:190px;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  right:-55px;top:-70px;
+  animation:floaty 6s ease-in-out infinite;
+}
+header:after{
+  content:"✨";
+  position:absolute;
+  right:28px;bottom:18px;
+  font-size:35px;
+  animation:pop 2.4s ease-in-out infinite;
+}
+h1{margin:0;font-size:32px;letter-spacing:-.5px}
+header p{margin:7px 0 0;opacity:.95}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(15px);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 14px 34px rgba(80,50,120,.10);
+  animation:rise .35s ease both;
+}
+
+.sectionTitle{display:flex;align-items:center;gap:8px;margin:0 0 14px}
+.smallText{font-size:13px;color:var(--muted);margin-top:-6px}
+
+button{
+  border:0;
+  border-radius:18px;
+  padding:13px 15px;
+  color:white;
+  font-weight:800;
+  font-size:14px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  box-shadow:0 10px 22px rgba(139,92,246,.20);
+  transition:.2s transform,.2s box-shadow,.2s opacity;
+}
+button:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(139,92,246,.26)}
+button:active{transform:scale(.98)}
+.green{background:linear-gradient(135deg,#34d399,#10b981)}
+.red{background:linear-gradient(135deg,#fb7185,#ef4444)}
+.orange{background:linear-gradient(135deg,#fb923c,#f97316)}
+.dark{background:linear-gradient(135deg,#374151,#111827)}
+.gray{background:linear-gradient(135deg,#9ca3af,#6b7280)}
+.lightBtn{background:white;color:var(--purple);border:1px solid #ede9fe;box-shadow:0 8px 18px rgba(80,50,120,.08)}
+
+input,textarea,select{
+  width:100%;
+  padding:13px 14px;
+  border-radius:18px;
+  border:1px solid #eadcf8;
+  background:rgba(255,255,255,.9);
+  margin-bottom:10px;
+  font-size:15px;
+  outline:none;
+  transition:.2s;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--pink);
+  box-shadow:0 0 0 4px rgba(255,122,182,.15);
+}
+textarea{min-height:76px;resize:vertical}
+
+.homeGrid{display:grid;gap:13px}
+.homeCard{
+  min-height:105px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  text-align:left;
+  border-radius:26px;
+  padding:18px;
+  background:rgba(255,255,255,.78);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 12px 30px rgba(80,50,120,.10);
+}
+.homeCard b{display:block;font-size:18px;margin-bottom:4px}
+.homeCard span{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.homeIcon{font-size:34px;background:#fff;border-radius:22px;padding:12px;box-shadow:inset 0 0 0 1px #fce7f3}
+
+.summary{display:grid;gap:10px}
+.summary div{
+  background:linear-gradient(135deg,#fff,#fff7fb);
+  border:1px solid #fce7f3;
+  border-radius:20px;
+  padding:14px;
+  text-align:center;
+  font-weight:800;
+}
+.summary span{display:block;margin-top:6px;color:var(--purple);font-size:18px}
+
+.formGrid{display:grid;gap:12px}
+.formBlock{background:#fff7fb;border:1px solid #fce7f3;border-radius:24px;padding:14px}
+.formBlock h3{margin:0 0 10px;font-size:17px}
+.articleBox{
+  background:white;
+  border:1px solid #fce7f3;
+  padding:12px;
+  border-radius:20px;
+  margin-bottom:10px;
+  box-shadow:0 8px 18px rgba(255,122,182,.08);
+}
+.articleTop{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.articleTop b{font-size:14px;color:var(--purple)}
+.articleActions{display:flex;gap:8px;flex-wrap:wrap}
+
+.orderCard h3{margin:0 0 5px;font-size:20px;color:var(--purple)}
+.metaLine{color:var(--muted);font-size:14px;margin:5px 0}
+.totalPill{display:inline-block;margin:4px 5px 4px 0;padding:8px 10px;border-radius:999px;background:#f5f3ff;color:#6d28d9;font-weight:800;font-size:13px}
+
+.filter{display:flex;gap:8px;flex-wrap:wrap}
+.filter button{padding:10px 12px;font-size:13px;background:white;color:var(--purple);border:1px solid #ede9fe;box-shadow:none}
+.filter button.active{background:linear-gradient(135deg,var(--pink),var(--purple));color:white;box-shadow:0 10px 22px rgba(139,92,246,.18)}
+.checks label{display:block;margin:9px 0;background:#fff7fb;padding:10px;border-radius:15px}
+.checks input{width:auto;margin-right:7px}
+
+.deleteZone{background:linear-gradient(135deg,#fff1f2,#fff);border:1px solid #fecdd3}
+
+.bottom{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(15px);
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  padding:10px 14px;
+  box-shadow:0 -8px 28px rgba(80,50,120,.12);
+  z-index:50;
+}
+.bottom button{height:52px;font-size:16px;border-radius:20px}
+
+.stickySave{
+  position:sticky;
+  bottom:86px;
+  z-index:40;
+  display:grid;
+  gap:8px;
+  grid-template-columns:1fr 1fr;
+  background:rgba(255,255,255,.70);
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+  padding:10px;
+  box-shadow:0 12px 28px rgba(80,50,120,.12);
+}
+
+
+/* PRINT DAY 50 x 40 mm */
+.printLayout{display:grid;gap:14px}
+.printPanel{background:#fff;border:1px solid #e5e7eb;border-radius:24px;padding:16px;box-shadow:0 12px 28px rgba(0,0,0,.06)}
+.printFilters{display:grid;gap:10px}
+.printTopActions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.printBadge{display:inline-block;background:#111;color:#fff;border-radius:10px;padding:7px 10px;font-weight:900;font-size:13px}
+.printList{display:grid;gap:12px;margin-top:14px}
+.printItem{display:grid;grid-template-columns:86px 1fr 86px;gap:10px;align-items:center;background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:10px;box-shadow:0 10px 24px rgba(0,0,0,.06)}
+.printControls{display:grid;gap:10px;align-content:center;font-size:13px;font-weight:800}
+.printControls label{display:flex;gap:6px;align-items:center}
+.printControls input{width:auto;margin:0;accent-color:#111}
+.printDownload{display:grid;gap:8px;align-content:center}
+.printDownload button{background:linear-gradient(135deg,#111827,#000);font-size:12px;padding:11px 8px}
+.labelPreview{
+  width:500px;
+  height:400px;
+  background:#fff;
+  color:#000;
+  border:2px solid #111;
+  border-radius:16px;
+  padding:18px 20px;
+  font-family:Arial,sans-serif;
+  position:relative;
+  overflow:hidden;
+  box-shadow:none;
+}
+.labelPreview *{font-family:Arial,sans-serif;color:#000}
+.moveBlock{position:relative}
+.labelEditMode{outline:3px dashed #111;outline-offset:-7px}
+.labelEditMode .moveBlock{cursor:move;outline:2px dashed #999;background:rgba(255,255,255,.86);touch-action:none}
+.labelEditMode .moveBlock:active{outline-color:#000}
+.labelLogoSpace{width:150px;height:150px;float:left;margin:0 18px 8px 0}
+.labelId{position:absolute;top:10px;left:12px;background:#000;color:#fff!important;border-radius:7px;padding:5px 9px;font-weight:900;font-size:19px;line-height:1}
+.labelName{font-size:35px;font-weight:900;text-align:center;margin:2px 0 8px;text-transform:uppercase;line-height:1.05;letter-spacing:-1px}
+.labelLine{font-size:22px;font-weight:800;margin:6px 0;line-height:1.15;display:flex;gap:9px;align-items:flex-start}
+.labelLine .ico{font-size:23px;line-height:1}
+.labelRemark{clear:both;border-top:2px dashed #111;border-bottom:2px dashed #111;padding:8px 0;margin:10px 0;font-size:20px;font-weight:800;line-height:1.15;display:flex;gap:8px}
+.labelMoney{border-top:2px solid #111;margin-top:8px;padding-top:8px;font-size:20px;font-weight:800;line-height:1.2}
+.labelMoneyRow{display:flex;gap:10px;margin:3px 0}.labelMoneyRow b{min-width:100px}
+.labelTotal{font-size:30px;font-weight:900;margin-top:6px;line-height:1.1}.labelPaid{position:absolute;right:20px;bottom:18px;background:#000;color:#fff!important;border-radius:9px;padding:7px 16px;font-size:22px;font-weight:900}.labelPart{position:absolute;right:16px;bottom:16px;font-size:22px;font-weight:900}.labelNoPrice .labelPaid{left:50%;right:auto;transform:translateX(-50%);bottom:22px}.labelNoPrice .labelRemark{margin-top:18px}.printEmpty{padding:16px;border-radius:18px;background:#f9fafb;border:1px dashed #d1d5db;color:#6b7280;text-align:center;font-weight:800}
+@media(min-width:950px){.printLayout{grid-template-columns:285px 1fr}.printList{grid-template-columns:1fr}}
+@media(max-width:760px){.printItem{grid-template-columns:1fr}.labelPreview{transform:scale(.62);transform-origin:top left;margin-bottom:-150px}.printDownload,.printControls{grid-template-columns:1fr 1fr}.printControls{display:flex;flex-wrap:wrap}}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(18px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(10deg)}}
+
+@media(min-width:720px){
+  .homeGrid{grid-template-columns:repeat(2,1fr)}
+  .summary{grid-template-columns:repeat(3,1fr)}
+  .formGrid{grid-template-columns:1fr 1fr}
+  .wide{grid-column:1/-1}
+  .articleRow{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="loginPage" class="container">
+  <div class="card">
+    <h2 class="sectionTitle">🌸 Connexion KIAH Store</h2>
+    <p class="smallText">Connecte-toi pour gérer les commandes.</p>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Mot de passe">
+    <button onclick="login()">Connexion</button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+<header>
+  <h1>KIAH Store</h1>
+  <p>Version Cute PRO 2.0 • Commandes • Livraison • Finance</p>
+</header>
+
+<div class="container">
+
+<section id="home">
+  <div class="card">
+    <h2 class="sectionTitle">🏠 Accueil</h2>
+    <p>Utilisateur : <b id="currentUser">Principal</b></p>
+    <div class="homeGrid">
+      <button class="homeCard" onclick="openNew()">
+        <span><b>+ Commande</b><span>Ajouter une nouvelle commande simplement</span></span>
+        <span class="homeIcon">🛍️</span>
+      </button>
+      <button class="homeCard" onclick="show('livraison')">
+        <span><b>Livraison</b><span>Voir, filtrer, modifier et exporter</span></span>
+        <span class="homeIcon">🚚</span>
+      </button>
+      <button class="homeCard" onclick="show('finance')">
+        <span><b>Finance</b><span>Total, livraison et montant à obtenir</span></span>
+        <span class="homeIcon">💰</span>
+      </button>
+      <button class="homeCard" onclick="show('printday')">
+        <span><b>Print Day</b><span>Étiquettes PNG 50 × 40 mm pour imprimante thermique</span></span>
+        <span class="homeIcon">🖨️</span>
+      </button>
+      <button class="homeCard" onclick="toggleUserHome()">
+        <span><b>Utilisateur</b><span>Changer de surnom ou quitter</span></span>
+        <span class="homeIcon">👤</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="userBox" class="card hidden">
+    <h3 class="sectionTitle">👤 Profil</h3>
+    <select id="profiles" onchange="changeProfile()"></select>
+    <div class="articleActions">
+      <button class="orange" onclick="addProfile()">+ Surnom</button>
+      <button class="gray" onclick="renameProfile()">Modifier surnom</button>
+      <button class="red" onclick="logout()">Quitter</button>
+    </div>
+  </div>
+</section>
+
+<section id="new" class="hidden">
+  <div class="card">
+    <h2 id="formTitle" class="sectionTitle">🛍️ Nouvelle commande</h2>
+    <p class="smallText">Formulaire simplifié par blocs pour ne pas encombrer l’écran.</p>
+
+    <div class="formGrid">
+      <div class="formBlock">
+        <h3>👩 Client</h3>
+        <input id="nom" placeholder="Nom du client">
+        <input id="contact" placeholder="Contact / téléphone">
+        <textarea id="adresse" placeholder="Adresse complète"></textarea>
+      </div>
+
+      <div class="formBlock">
+        <h3>🚚 Livraison</h3>
+        <input id="livraisonPrix" type="number" placeholder="Prix livraison">
+        <input id="agence" placeholder="Nom agence livraison">
+        <input id="dateLivraison" type="date">
+      </div>
+
+      <div class="formBlock wide">
+        <h3>🎁 Articles</h3>
+        <div id="articles"></div>
+        <button class="orange" onclick="addArticle()">+ Ajouter article</button>
+      </div>
+
+      <div class="formBlock wide">
+        <h3>📝 Remarque</h3>
+        <textarea id="remarque" placeholder="Remarque optionnelle"></textarea>
+      </div>
+    </div>
+
+    <div class="stickySave">
+      <button class="green" onclick="saveOrder()">Enregistrer</button>
+      <button class="gray" onclick="cancelEdit()">Annuler</button>
+    </div>
+  </div>
+</section>
+
+<section id="livraison" class="hidden">
+  <div class="card">
+    <h2 class="sectionTitle">🚚 Liste de livraison</h2>
+    <div class="summary">
+      <div>Commandes<span id="count">0</span></div>
+      <div>Total articles<span id="sumArticles">0 Ar</span></div>
+      <div>Total général<span id="sumGeneral">0 Ar</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Filtrer par agence</h3>
+    <div id="agencyBtns" class="filter"></div>
+    <h3>Filtrer par date</h3>
+    <div id="dateBtns" class="filter"></div>
+  </div>
+
+  <div class="card">
+    <button class="orange" onclick="toggleCapture()">📸 Télécharger tableau PNG</button>
+    <div id="captureBox" class="hidden checks" style="margin-top:15px">
+      <h3>Choisir les colonnes de la photo</h3>
+      <label><input type="checkbox" class="colChoice" value="nom" checked> Nom</label>
+      <label><input type="checkbox" class="colChoice" value="contact" checked> Contact</label>
+      <label><input type="checkbox" class="colChoice" value="adresse" checked> Adresse</label>
+      <label><input type="checkbox" class="colChoice" value="articles" checked> Articles / Qté / Prix</label>
+      <label><input type="checkbox" class="colChoice" value="totalArticles" checked> Total articles</label>
+      <label><input type="checkbox" class="colChoice" value="livraison" checked> Prix livraison</label>
+      <label><input type="checkbox" class="colChoice" value="total" checked> Total</label>
+      <label><input type="checkbox" class="colChoice" value="agence" checked> Agence</label>
+      <label><input type="checkbox" class="colChoice" value="date" checked> Date</label>
+      <label><input type="checkbox" class="colChoice" value="remarque"> Remarque</label>
+      <br>
+      <button class="green" onclick="downloadPNG()">Télécharger PNG</button>
+    </div>
+  </div>
+
+  <div class="card deleteZone">
+    <h3 class="sectionTitle">🗑️ Supprimer par choix</h3>
+    <p class="smallText">Choisis une agence et/ou une date. Cela supprimera seulement les commandes correspondantes.</p>
+    <select id="deleteAgency"></select>
+    <select id="deleteDate"></select>
+    <button class="red" onclick="deleteSelectedOrders()">Supprimer les commandes sélectionnées</button>
+  </div>
+
+  <div id="ordersList"></div>
+</section>
+
+
+<section id="printday" class="hidden">
+  <div class="card">
+    <div class="printTopActions">
+      <div>
+        <h2 class="sectionTitle">🖨️ Print Day <span class="printBadge">50 × 40 mm</span></h2>
+        <p class="smallText">Filtre par agence et jour, puis télécharge les étiquettes PNG noir et blanc.</p>
+      </div>
+      <button class="dark" onclick="downloadAllPrintLabels()">Télécharger toutes les étiquettes PNG</button>
+    </div>
+  </div>
+
+  <div class="printLayout">
+    <div>
+      <div class="printPanel">
+        <h3 class="sectionTitle">🔎 Sélection</h3>
+        <div class="printFilters">
+          <label><b>Agence</b></label>
+          <select id="printAgency"></select>
+          <label><b>Jour</b></label>
+          <select id="printDate"></select>
+          <button onclick="renderPrintDay()">Afficher les commandes</button>
+        </div>
+      </div>
+
+      <div class="printPanel">
+        <h3 class="sectionTitle">⚙️ Options globales</h3>
+        <div class="checks">
+          <label><input type="checkbox" id="printGlobalPrice" checked onchange="applyPrintGlobalOptions()"> Afficher les prix</label>
+          <label><input type="checkbox" id="printGlobalPaid" onchange="applyPrintGlobalOptions()"> Marquer comme PAYÉ</label>
+        </div>
+      </div>
+
+      <div class="printPanel">
+        <h3 class="sectionTitle">ℹ️ Info</h3>
+        <p class="smallText">La date et l’agence servent seulement au filtre. Elles ne s’affichent pas sur l’étiquette.</p>
+        <p><b>Commandes trouvées :</b> <span id="printFound">0</span></p>
+        <p><b>Étiquettes générées :</b> <span id="printGenerated">0</span></p>
+      </div>
+    </div>
+
+    <div class="printPanel">
+      <h3 class="sectionTitle">👁️ Aperçu avant impression</h3>
+      <p class="smallText">Chaque étiquette garde une zone blanche invisible de 15 × 15 mm en haut à gauche pour ton logo.</p>
+      <div id="printList" class="printList"></div>
+    </div>
+  </div>
+</section>
+
+<section id="finance" class="hidden">
+  <div class="card">
+    <h2 class="sectionTitle">💰 Gestion financière</h2>
+    <div class="summary">
+      <div>Total<span id="finTotal">0 Ar</span></div>
+      <div>Total livraison<span id="finLivraison">0 Ar</span></div>
+      <div>À obtenir<span id="finGet">0 Ar</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Détail financier</h3>
+    <div id="financeList"></div>
+  </div>
+</section>
+
+</div>
+
+<div class="bottom">
+  <button onclick="show('home')">🏠 Accueil</button>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD8M5Ycw_ShmcmwH6Y0NDaK71zXziaZqAA",
+  authDomain: "kiah-store.firebaseapp.com",
+  databaseURL: "https://kiah-store-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "kiah-store",
+  storageBucket: "kiah-store.firebasestorage.app",
+  messagingSenderId: "762174434565",
+  appId: "1:762174434565:web:34c32000de8af6a3bc9b6c"
+};
+
+const fb=initializeApp(firebaseConfig);
+const auth=getAuth(fb);
+const db=getDatabase(fb);
+
+let profile=localStorage.getItem("profile")||"Principal";
+let orders={};
+let selectedAgency="ALL";
+let selectedDate="ALL";
+let editId=null;
+let unsubscribeOrders=null;
+
+function path(){return "kiahStore/"+encodeURIComponent(profile)+"/commandes"}
+function safe(v){return String(v??"").replace(/[&<>'"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;","\"":"&quot;"}[m]))}
+function money(v){return Number(v||0).toLocaleString("fr-FR")+" Ar"}
+function agency(o){return o.agence||"Sans agence"}
+function dte(o){return o.date||"Sans date"}
+function artTotal(o){return(o.articles||[]).reduce((s,a)=>s+(Number(a.quantite||0)*Number(a.prix||0)),0)}
+
+window.login=()=>signInWithEmailAndPassword(auth,email.value,password.value).catch(e=>alert(e.message));
+window.logout=()=>signOut(auth);
+window.toggleUserHome=()=>userBox.classList.toggle("hidden");
+
+onAuthStateChanged(auth,u=>{
+  if(u){
+    loginPage.classList.add("hidden");
+    app.classList.remove("hidden");
+    loadProfiles();
+    loadOrders();
+    restoreColumns();
+  }else{
+    loginPage.classList.remove("hidden");
+    app.classList.add("hidden");
+  }
+});
+
+function loadProfiles(){
+  onValue(ref(db,"kiahStoreProfiles"),snap=>{
+    let p=snap.val()||{};
+    if(!p.Principal)set(ref(db,"kiahStoreProfiles/Principal"),true);
+    p.Principal=true;
+    profiles.innerHTML="";
+    Object.keys(p).sort().forEach(n=>{
+      profiles.innerHTML+=`<option ${n===profile?"selected":""}>${safe(n)}</option>`;
+    });
+    currentUser.innerText=profile;
+  });
+}
+
+window.addProfile=()=>{
+  let n=prompt("Nouveau surnom");
+  if(!n)return;
+  profile=n.trim();
+  localStorage.setItem("profile",profile);
+  set(ref(db,"kiahStoreProfiles/"+profile),true);
+  currentUser.innerText=profile;
+  selectedAgency="ALL";
+  selectedDate="ALL";
+  loadOrders();
+};
+
+window.renameProfile=()=>{
+  let n=prompt("Modifier surnom",profile);
+  if(!n)return;
+  profile=n.trim();
+  localStorage.setItem("profile",profile);
+  set(ref(db,"kiahStoreProfiles/"+profile),true);
+  currentUser.innerText=profile;
+  selectedAgency="ALL";
+  selectedDate="ALL";
+  loadOrders();
+};
+
+window.changeProfile=()=>{
+  profile=profiles.value;
+  localStorage.setItem("profile",profile);
+  currentUser.innerText=profile;
+  selectedAgency="ALL";
+  selectedDate="ALL";
+  loadOrders();
+};
+
+function loadOrders(){
+  if(unsubscribeOrders)unsubscribeOrders();
+  unsubscribeOrders=onValue(ref(db,path()),snap=>{
+    orders=snap.val()||{};
+    render();
+  });
+}
+
+window.show=id=>{
+  ["home","new","livraison","finance","printday"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+  render();
+  if(id==="printday")renderPrintDay();
+};
+
+window.openNew=()=>{
+  clearForm();
+  addArticle();
+  show("new");
+};
+
+window.addArticle=(article="",qte="",prix="")=>{
+  let div=document.createElement("div");
+  div.className="articleBox";
+  div.innerHTML=`
+    <div class="articleTop">
+      <b>Article</b>
+      <button type="button" class="red" onclick="this.closest('.articleBox').remove()">×</button>
+    </div>
+    <div class="articleRow">
+      <input class="a" placeholder="Nom article" value="${safe(article)}">
+      <input class="q" type="number" placeholder="Qté" value="${safe(qte)}">
+      <input class="p" type="number" placeholder="Prix unitaire" value="${safe(prix)}">
+    </div>
+  `;
+  articles.appendChild(div);
+};
+
+function getArticles(){
+  let a=[...document.querySelectorAll(".a")];
+  let q=[...document.querySelectorAll(".q")];
+  let p=[...document.querySelectorAll(".p")];
+  return a.map((x,i)=>({
+    article:x.value,
+    quantite:Number(q[i].value||0),
+    prix:Number(p[i].value||0)
+  })).filter(x=>x.article || x.quantite || x.prix);
+}
+
+window.saveOrder=async()=>{
+  if(!nom.value.trim()){
+    alert("Ajoute au moins le nom du client");
+    return;
+  }
+
+  let data={
+    nom:nom.value,
+    contact:contact.value,
+    adresse:adresse.value,
+    articles:getArticles(),
+    livraison:Number(livraisonPrix.value||0),
+    agence:agence.value,
+    date:dateLivraison.value,
+    remarque:remarque.value,
+    createdAt:editId && orders[editId]?.createdAt ? orders[editId].createdAt : Date.now(),
+    updatedAt:Date.now()
+  };
+
+  try{
+    if(editId){
+      await update(ref(db,path()+"/"+editId),data);
+      alert("Commande modifiée ✅");
+    }else{
+      await set(push(ref(db,path())),data);
+      alert("Commande ajoutée ✅");
+    }
+    clearForm();
+    show("livraison");
+  }catch(e){alert("Erreur: "+e.message)}
+};
+
+function clearForm(){
+  editId=null;
+  formTitle.innerText="🛍️ Nouvelle commande";
+  nom.value="";
+  contact.value="";
+  adresse.value="";
+  livraisonPrix.value="";
+  agence.value="";
+  dateLivraison.value="";
+  remarque.value="";
+  articles.innerHTML="";
+}
+
+window.cancelEdit=()=>{
+  clearForm();
+  show("home");
+};
+
+function allOrders(){return Object.entries(orders).map(([id,o])=>({id,...o}))}
+function filteredOrders(){
+  let arr=allOrders();
+  if(selectedAgency!=="ALL")arr=arr.filter(o=>agency(o)===selectedAgency);
+  if(selectedDate!=="ALL")arr=arr.filter(o=>dte(o)===selectedDate);
+  return arr.reverse();
+}
+
+function makeFilterButton(text,active,onclick){
+  let btn=document.createElement("button");
+  btn.textContent=text;
+  if(active)btn.classList.add("active");
+  btn.onclick=onclick;
+  return btn;
+}
+
+function renderFilters(all){
+  let agencies=[...new Set(all.map(agency))].sort();
+  let dates=[...new Set(all.filter(o=>selectedAgency==="ALL"||agency(o)===selectedAgency).map(dte))].sort().reverse();
+
+  agencyBtns.innerHTML="";
+  agencyBtns.appendChild(makeFilterButton("Toutes",selectedAgency==="ALL",()=>filterAgency("ALL")));
+  agencies.forEach(a=>agencyBtns.appendChild(makeFilterButton(a,selectedAgency===a,()=>filterAgency(a))));
+
+  dateBtns.innerHTML="";
+  dateBtns.appendChild(makeFilterButton("Toutes",selectedDate==="ALL",()=>filterDate("ALL")));
+  dates.forEach(d=>dateBtns.appendChild(makeFilterButton(d,selectedDate===d,()=>filterDate(d))));
+
+  deleteAgency.innerHTML=`<option value="ALL">Toutes les agences</option>`+agencies.map(a=>`<option value="${safe(a)}">${safe(a)}</option>`).join("");
+  deleteDate.innerHTML=`<option value="ALL">Toutes les dates</option>`+dates.map(d=>`<option value="${safe(d)}">${safe(d)}</option>`).join("");
+  renderPrintFilters(all);
+}
+
+function render(){
+  let all=allOrders();
+  renderFilters(all);
+  let arr=filteredOrders();
+
+  ordersList.innerHTML="";
+  financeList.innerHTML="";
+
+  let c=0,totalArticles=0,totalLivraison=0,totalGeneral=0;
+
+  arr.forEach(o=>{
+    c++;
+    let at=artTotal(o);
+    let liv=Number(o.livraison||0);
+    let total=at+liv;
+    totalArticles+=at;
+    totalLivraison+=liv;
+    totalGeneral+=total;
+
+    ordersList.innerHTML+=`
+      <div class="card orderCard">
+        <h3>${safe(o.nom||"Sans nom")}</h3>
+        <p class="metaLine">📞 ${safe(o.contact||"")}</p>
+        <p class="metaLine">📍 ${safe(o.adresse||"")}</p>
+        ${(o.articles||[]).map(x=>`
+          <div class="articleBox">
+            <b>${safe(x.article||"Article")}</b><br>
+            Qté ${safe(x.quantite||0)} • ${money(x.prix)}
+          </div>
+        `).join("")}
+        <span class="totalPill">Articles: ${money(at)}</span>
+        <span class="totalPill">Livraison: ${money(liv)}</span>
+        <span class="totalPill">Total: ${money(total)}</span>
+        <p><b>Agence:</b> ${safe(agency(o))}</p>
+        <p><b>Date:</b> ${safe(dte(o))}</p>
+        ${o.remarque ? `<p><b>Remarque:</b> ${safe(o.remarque)}</p>` : ""}
+        <div class="articleActions">
+          <button onclick="editOrder('${o.id}')">Modifier</button>
+          <button class="red" onclick="deleteOrder('${o.id}')">Supprimer</button>
+        </div>
+      </div>
+    `;
+
+    financeList.innerHTML+=`
+      <div class="card">
+        <b>${safe(o.nom||"Sans nom")}</b><br>
+        Total: ${money(total)}<br>
+        Livraison: ${money(liv)}<br>
+        À obtenir: ${money(total-liv)}
+      </div>
+    `;
+  });
+
+  count.innerText=c;
+  sumArticles.innerText=money(totalArticles);
+  sumGeneral.innerText=money(totalGeneral);
+  finTotal.innerText=money(totalGeneral);
+  finLivraison.innerText=money(totalLivraison);
+  finGet.innerText=money(totalGeneral-totalLivraison);
+}
+
+window.editOrder=id=>{
+  let o=orders[id];
+  if(!o)return;
+  editId=id;
+  formTitle.innerText="✏️ Modifier commande";
+  nom.value=o.nom||"";
+  contact.value=o.contact||"";
+  adresse.value=o.adresse||"";
+  livraisonPrix.value=o.livraison||"";
+  agence.value=o.agence||"";
+  dateLivraison.value=o.date||"";
+  remarque.value=o.remarque||"";
+  articles.innerHTML="";
+  (o.articles||[]).forEach(a=>addArticle(a.article,a.quantite,a.prix));
+  if(!(o.articles||[]).length)addArticle();
+  show("new");
+};
+
+window.filterAgency=a=>{
+  selectedAgency=a;
+  selectedDate="ALL";
+  render();
+};
+
+window.filterDate=d=>{
+  selectedDate=d;
+  render();
+};
+
+window.deleteOrder=id=>{
+  if(confirm("Supprimer cette commande ?"))remove(ref(db,path()+"/"+id));
+};
+
+window.deleteSelectedOrders=async()=>{
+  let ag=deleteAgency.value;
+  let dt=deleteDate.value;
+
+  if(ag==="ALL" && dt==="ALL"){
+    alert("Choisis au moins une agence ou une date pour éviter de tout supprimer d'un coup.");
+    return;
+  }
+
+  let targets=allOrders().filter(o=>{
+    let okAgency=ag==="ALL" || agency(o)===ag;
+    let okDate=dt==="ALL" || dte(o)===dt;
+    return okAgency && okDate;
+  });
+
+  if(!targets.length){
+    alert("Aucune commande trouvée avec ce choix.");
+    return;
+  }
+
+  let label=`${targets.length} commande(s)`;
+  if(!confirm("Supprimer "+label+" sélectionnée(s) ?"))return;
+
+  try{
+    await Promise.all(targets.map(o=>remove(ref(db,path()+"/"+o.id))));
+    alert(label+" supprimée(s) ✅");
+  }catch(e){alert("Erreur : "+e.message)}
+};
+
+window.toggleCapture=()=>captureBox.classList.toggle("hidden");
+
+function restoreColumns(){
+  let saved=JSON.parse(localStorage.getItem("kiahCols")||"null");
+  if(!saved)return;
+  document.querySelectorAll(".colChoice").forEach(c=>c.checked=saved.includes(c.value));
+}
+
+
+function renderPrintFilters(all){
+  if(!document.getElementById("printAgency"))return;
+  let agencies=[...new Set(all.map(agency))].sort();
+  let oldAg=printAgency.value||"ALL";
+  let oldDt=printDate.value||"ALL";
+  printAgency.innerHTML=`<option value="ALL">Toutes les agences</option>`+agencies.map(a=>`<option value="${safe(a)}">${safe(a)}</option>`).join("");
+  if([...printAgency.options].some(o=>o.value===oldAg))printAgency.value=oldAg;
+  let dates=[...new Set(all.filter(o=>printAgency.value==="ALL"||agency(o)===printAgency.value).map(dte))].sort().reverse();
+  printDate.innerHTML=`<option value="ALL">Toutes les dates</option>`+dates.map(d=>`<option value="${safe(d)}">${safe(d)}</option>`).join("");
+  if([...printDate.options].some(o=>o.value===oldDt))printDate.value=oldDt;
+  printAgency.onchange=()=>{renderPrintFilters(allOrders());renderPrintDay();};
+  printDate.onchange=()=>renderPrintDay();
+}
+
+function printOrders(){
+  let ag=printAgency.value||"ALL";
+  let dt=printDate.value||"ALL";
+  return allOrders().filter(o=>{
+    let okAgency=ag==="ALL" || agency(o)===ag;
+    let okDate=dt==="ALL" || dte(o)===dt;
+    return okAgency && okDate;
+  }).reverse();
+}
+
+function splitTextForLabels(o,showPrice){
+  let base=[o.nom||"Sans nom",o.contact||"",o.adresse||"",o.remarque||""].join(" ");
+  let limit=showPrice?135:210;
+  let chunks=[];
+  if(base.length<=limit){chunks=[{addr:o.adresse||"",rem:o.remarque||""}];}
+  else{
+    let addr=String(o.adresse||"");
+    let rem=String(o.remarque||"");
+    chunks.push({addr:addr.slice(0,90),rem:rem.slice(0,showPrice?70:130)});
+    let restAddr=addr.slice(90);
+    let restRem=rem.slice(showPrice?70:130);
+    while((restAddr+restRem).trim() && chunks.length<3){
+      chunks.push({addr:restAddr.slice(0,120),rem:restRem.slice(0,showPrice?100:160)});
+      restAddr=restAddr.slice(120);
+      restRem=restRem.slice(showPrice?100:160);
+    }
+  }
+  return chunks;
+}
+
+function labelHTML(o,opt,part,totalParts){
+  let at=artTotal(o);
+  let liv=Number(o.livraison||0);
+  let total=at+liv;
+  let showPrice=opt.showPrice && part===1;
+  let showPaid=opt.paid;
+  return `
+    <div class="labelPreview ${showPrice?'':'labelNoPrice'}" data-order="${safe(o.id)}" data-part="${part}">
+      <div class="labelLogoSpace"></div>
+      <div class="labelId">#${safe(opt.index)}${totalParts>1?` (${part}/${totalParts})`:""}</div>
+      <div class="labelName moveBlock">${safe(o.nom||"Sans nom")}</div>
+      ${o.contact?`<div class="labelLine moveBlock"><span class="ico">☎</span><span>${safe(o.contact)}</span></div>`:""}
+      ${opt.addr?`<div class="labelLine moveBlock"><span class="ico">⌖</span><span>${safe(opt.addr)}</span></div>`:""}
+      ${opt.rem?`<div class="labelRemark moveBlock"><span>✎</span><span>Remarque : ${safe(opt.rem)}</span></div>`:""}
+      ${showPrice?`
+        <div class="labelMoney moveBlock">
+          <div class="labelMoneyRow"><span>🛒</span><b>Articles</b><span>: ${money(at)}</span></div>
+          ${liv>0?`<div class="labelMoneyRow"><span>🚚</span><b>Livraison</b><span>: ${money(liv)}</span></div>`:""}
+          <div class="labelTotal">TOTAL : ${money(total)}</div>
+        </div>`:""}
+      ${showPaid?`<div class="labelPaid moveBlock">✓ PAYÉ</div>`:""}
+      ${totalParts>1 && !showPaid?`<div class="labelPart moveBlock">${part}/${totalParts}</div>`:""}
+    </div>`;
+}
+
+window.renderPrintDay=()=>{
+  let arr=printOrders();
+  printFound.innerText=arr.length;
+  printList.innerHTML="";
+  let generated=0;
+  if(!arr.length){
+    printGenerated.innerText=0;
+    printList.innerHTML=`<div class="printEmpty">Aucune commande trouvée avec ce choix.</div>`;
+    return;
+  }
+  arr.forEach((o,i)=>{
+    let showPrice=printGlobalPrice.checked;
+    let paid=printGlobalPaid.checked;
+    let chunks=splitTextForLabels(o,showPrice);
+    chunks.forEach((chunk,pi)=>{
+      generated++;
+      let item=document.createElement("div");
+      item.className="printItem";
+      item.innerHTML=`
+        <div class="printControls">
+          <b>#${String(i+1).padStart(3,"0")}${chunks.length>1?` (${pi+1}/${chunks.length})`:""}</b>
+          <label><input type="checkbox" class="onePrice" ${showPrice?"checked":""} onchange="refreshOneLabel(this)"> Prix</label>
+          <label><input type="checkbox" class="onePaid" ${paid?"checked":""} onchange="refreshOneLabel(this)"> Payé</label>
+          <button type="button" onclick="toggleLabelMove(this)">Modifier emplacement</button>
+        </div>
+        <div class="labelHolder" data-id="${safe(o.id)}" data-index="${String(i+1).padStart(3,"0")}" data-part="${pi+1}" data-totalparts="${chunks.length}" data-addr="${safe(chunk.addr)}" data-rem="${safe(chunk.rem)}"></div>
+        <div class="printDownload"><button onclick="downloadOnePrintLabel(this)">PNG</button></div>
+      `;
+      printList.appendChild(item);
+      let holder=item.querySelector(".labelHolder");
+      holder.innerHTML=labelHTML(o,{index:String(i+1).padStart(3,"0"),showPrice,paid,addr:chunk.addr,rem:chunk.rem},pi+1,chunks.length);
+    });
+  });
+  printGenerated.innerText=generated;
+};
+
+window.applyPrintGlobalOptions=()=>renderPrintDay();
+
+let movingBlock=null;
+let moveData=null;
+
+window.toggleLabelMove=btn=>{
+  let item=btn.closest(".printItem");
+  let label=item.querySelector(".labelPreview");
+  let active=label.classList.toggle("labelEditMode");
+  btn.textContent=active?"Verrouiller":"Modifier emplacement";
+
+  if(active){
+    let blocks=[...label.querySelectorAll(".moveBlock")];
+    blocks.forEach(b=>{
+      let left=b.offsetLeft;
+      let top=b.offsetTop;
+      b.style.position="absolute";
+      b.style.left=left+"px";
+      b.style.top=top+"px";
+      b.style.margin="0";
+      b.style.zIndex="5";
+      b.onpointerdown=startMoveBlock;
+    });
+  }else{
+    label.querySelectorAll(".moveBlock").forEach(b=>{
+      b.onpointerdown=null;
+    });
+  }
+};
+
+function startMoveBlock(e){
+  let label=this.closest(".labelPreview");
+  if(!label.classList.contains("labelEditMode"))return;
+  e.preventDefault();
+  movingBlock=this;
+  movingBlock.setPointerCapture(e.pointerId);
+  moveData={
+    pointerId:e.pointerId,
+    startX:e.clientX,
+    startY:e.clientY,
+    left:parseFloat(movingBlock.style.left||0),
+    top:parseFloat(movingBlock.style.top||0),
+    label
+  };
+  movingBlock.onpointermove=moveBlock;
+  movingBlock.onpointerup=stopMoveBlock;
+  movingBlock.onpointercancel=stopMoveBlock;
+}
+
+function moveBlock(e){
+  if(!movingBlock||!moveData)return;
+  let x=moveData.left+(e.clientX-moveData.startX);
+  let y=moveData.top+(e.clientY-moveData.startY);
+  x=Math.max(0,Math.min(x,moveData.label.clientWidth-movingBlock.offsetWidth));
+  y=Math.max(0,Math.min(y,moveData.label.clientHeight-movingBlock.offsetHeight));
+  movingBlock.style.left=x+"px";
+  movingBlock.style.top=y+"px";
+}
+
+function stopMoveBlock(e){
+  if(!movingBlock)return;
+  try{movingBlock.releasePointerCapture(moveData.pointerId)}catch(err){}
+  movingBlock.onpointermove=null;
+  movingBlock.onpointerup=null;
+  movingBlock.onpointercancel=null;
+  movingBlock=null;
+  moveData=null;
+}
+
+window.refreshOneLabel=btn=>{
+  let item=btn.closest(".printItem");
+  let holder=item.querySelector(".labelHolder");
+  let o=orders[holder.dataset.id];
+  if(!o)return;
+  let showPrice=item.querySelector(".onePrice").checked;
+  let paid=item.querySelector(".onePaid").checked;
+  holder.innerHTML=labelHTML({id:holder.dataset.id,...o},{
+    index:holder.dataset.index,
+    showPrice,
+    paid,
+    addr:holder.dataset.addr,
+    rem:holder.dataset.rem
+  },Number(holder.dataset.part),Number(holder.dataset.totalparts));
+};
+
+async function downloadLabelElement(el,name){
+  let wasEdit=el.classList.contains("labelEditMode");
+  if(wasEdit)el.classList.remove("labelEditMode");
+  let canvas=await html2canvas(el,{scale:3,backgroundColor:"#ffffff"});
+  if(wasEdit)el.classList.add("labelEditMode");
+  let link=document.createElement("a");
+  link.download=name;
+  link.href=canvas.toDataURL("image/png");
+  link.click();
+}
+
+window.downloadOnePrintLabel=async btn=>{
+  let item=btn.closest(".printItem");
+  let label=item.querySelector(".labelPreview");
+  let id=label.dataset.order||"label";
+  let part=label.dataset.part||"1";
+  await downloadLabelElement(label,"Print-Day-50x40-"+profile+"-"+id+"-"+part+".png");
+};
+
+window.downloadAllPrintLabels=async()=>{
+  let labels=[...document.querySelectorAll("#printList .labelPreview")];
+  if(!labels.length){alert("Affiche d'abord les commandes à imprimer.");return;}
+  for(let i=0;i<labels.length;i++){
+    await downloadLabelElement(labels[i],"Print-Day-50x40-"+profile+"-"+(i+1)+".png");
+  }
+};
+
+
+window.downloadPNG=async()=>{
+  let selected=[...document.querySelectorAll(".colChoice:checked")].map(x=>x.value);
+  if(selected.length===0){alert("Choisis au moins une colonne");return}
+  localStorage.setItem("kiahCols",JSON.stringify(selected));
+  let arr=filteredOrders();
+
+  let box=document.createElement("div");
+  box.style.background="white";
+  box.style.padding="20px";
+  box.style.width="1100px";
+  box.style.position="fixed";
+  box.style.left="-9999px";
+  box.style.top="0";
+
+  box.innerHTML=`
+    <h2 style="text-align:center">LISTE DE LIVRAISON</h2>
+    <h3 style="text-align:center">${safe(profile.toUpperCase())}</h3>
+    <p style="text-align:center">Export : ${new Date().toLocaleString("fr-FR")}</p>
+    <hr>
+    <table style="width:100%;border-collapse:collapse;font-family:Arial;font-size:14px">
+      <thead><tr>
+        ${selected.includes("nom")?"<th>Nom</th>":""}
+        ${selected.includes("contact")?"<th>Contact</th>":""}
+        ${selected.includes("adresse")?"<th>Adresse</th>":""}
+        ${selected.includes("articles")?"<th>Articles</th>":""}
+        ${selected.includes("totalArticles")?"<th>Total articles</th>":""}
+        ${selected.includes("livraison")?"<th>Livraison</th>":""}
+        ${selected.includes("total")?"<th>Total</th>":""}
+        ${selected.includes("agence")?"<th>Agence</th>":""}
+        ${selected.includes("date")?"<th>Date</th>":""}
+        ${selected.includes("remarque")?"<th>Remarque</th>":""}
+      </tr></thead>
+      <tbody>
+        ${arr.map(o=>{
+          let at=artTotal(o),liv=Number(o.livraison||0),total=at+liv;
+          return `<tr>
+            ${selected.includes("nom")?`<td>${safe(o.nom||"")}</td>`:""}
+            ${selected.includes("contact")?`<td>${safe(o.contact||"")}</td>`:""}
+            ${selected.includes("adresse")?`<td>${safe(o.adresse||"")}</td>`:""}
+            ${selected.includes("articles")?`<td>${(o.articles||[]).map(a=>`${safe(a.article||"Article")} / Qté ${safe(a.quantite||0)} / ${money(a.prix)}`).join("<br>")}</td>`:""}
+            ${selected.includes("totalArticles")?`<td>${money(at)}</td>`:""}
+            ${selected.includes("livraison")?`<td>${money(liv)}</td>`:""}
+            ${selected.includes("total")?`<td>${money(total)}</td>`:""}
+            ${selected.includes("agence")?`<td>${safe(agency(o))}</td>`:""}
+            ${selected.includes("date")?`<td>${safe(dte(o))}</td>`:""}
+            ${selected.includes("remarque")?`<td>${safe(o.remarque||"")}</td>`:""}
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+
+  box.querySelectorAll("th,td").forEach(cell=>{
+    cell.style.border="1px solid #999";
+    cell.style.padding="8px";
+    cell.style.verticalAlign="top";
+  });
+  box.querySelectorAll("th").forEach(cell=>{
+    cell.style.background="#8b5cf6";
+    cell.style.color="white";
+  });
+
+  document.body.appendChild(box);
+  let canvas=await html2canvas(box,{scale:2});
+  let link=document.createElement("a");
+  link.download="Liste-Livraison-"+profile+".png";
+  link.href=canvas.toDataURL("image/png");
+  link.click();
+  box.remove();
+};
+</script>
+</body>
+</html>
